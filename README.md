@@ -14,7 +14,7 @@ Knockout for DOM manipulation.
 
 How to run UI
 -------------
-Bring up bridge.html in your favorite (past IE8) browser. Enter your gbg-data API key in the bottom field. Hit "Check" as many times as you like.
+Bring up index.html in your favorite (past IE8) browser. Hit the button as many times as you like.
 
 How to run tests
 ----------------
