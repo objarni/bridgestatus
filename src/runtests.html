@@ -3,16 +3,16 @@
 <head>
 	<meta charset="utf-8">
 	<title>BridgeStatus unit tests</title>
-	<link rel="stylesheet" href="lib/qunit/qunit-1.19.0.css">
+	<link rel="stylesheet" href="lib/qunit-1.19.0.css">
 </head>
 <body>
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
-	<a href='bridge.html'>Visa BridgeStatus</a>
-	<script src="lib/qunit/qunit-1.19.0.js"></script>
-	<script src="lib/ko/knockout-3.3.0.js"></script>
-	<script src="lib/jquery/jquery-1.6.4.js"></script>
-	<script src="js/bridgestatus.js"></script>
-	<script src="js/tests.js"></script>
+	<a href='index.html'>Visa BridgeStatus</a>
+
+	<!-- Wait until most of page has loaded until we load
+	dynamic stuff (require, ko, ..) -->
+	<script data-main='app/bridgestatus-tests' src="lib/require.js"></script>
+
 </body>
 </html>

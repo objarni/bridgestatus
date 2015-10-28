@@ -1,4 +1,4 @@
-requirejs(["./config"], function(config) {
+requirejs(["./require-config"], function(config) {
 
 	requirejs(["ko", "jquery"], function(ko, $) {
 
@@ -21,6 +21,10 @@ requirejs(["./config"], function(config) {
  					else
  						self.status('Nere');
 					console.log(response);
+				})
+				.fail(function(response) {
+					self.status("Fail!")
+					console.log(reponse);
 				});
 			};
 
