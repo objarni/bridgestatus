@@ -1,39 +1,32 @@
-requirejs(["./require-config"], function(config) {
+function BridgeStatusVM() {
+	var vm = {};
 
-	requirejs(["ko", "jquery"], function(ko, $) {
+	vm.status = ko.observable('unknown');
 
-		function BridgeStatusViewModel() {
-			var self = this;
+	vm.check = function() {
+		vm.status('checking');
+		var protocol = 'http://';
+		var key = '0c6d5b58-7482-4889-8d9e-2b4cf89a77d4';
+		var host = 'data.goteborg.se';
+		var api = '/BridgeService/v1.0/GetGABOpenedStatus/';
+		var format = '?format=JSON';
+		var url = protocol + host + api + key + format;
+		console.log(url);
+		$.get(url)
+			.success(function(response) {
+				if ( response.Value )
+					vm.status('up');
+				else
+					vm.status('down');
+				console.log(response);
+			})
+			.fail(function(response) {
+				vm.status("error")
+				console.log(response);
+			});
+	};
 
-			self.status = ko.observable('Nere eller uppe, vet inte!');
+	return vm;
+}
 
-			self.check = function() {
-				console.log('check');
-				var protocol = 'http://';
-				var key = '0c6d5b58-7482-4889-8d9e-2b4cf89a77d4';
-				var host = 'data.goteborg.se';
-				var api = '/BridgeService/v1.0/GetGABOpenedStatus/';
-				var format = '?format=JSON';
-				$.get(protocol + host + api + key + format)
- 				.success(function(response) {
- 					if ( response.value )
- 						self.status('Uppe');
- 					else
- 						self.status('Nere');
-					console.log(response);
-				})
-				.fail(function(response) {
-					self.status("Fail!")
-					console.log(reponse);
-				});
-			};
-
-		}
-
-		ko.applyBindings(new BridgeStatusViewModel());
-
-	});
-
-});
-
-
+ko.applyBindings(new BridgeStatusVM());

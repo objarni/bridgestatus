@@ -1,27 +1,59 @@
-console.log('hej');
+function mockAjax(succeed, response) {
+  $.get = function(url) {
+    var promise = {};
+    promise.success = function(vmCallback) { if( succeed ) vmCallback(response); return promise; };
+    promise.fail = function(vmCallback) { if( !succeed ) vmCallback(response); return promise; };
+    return promise;
+  };
+}
 
-requirejs(["./require-config"],	function(config) {
-	console.log('hej2');
-	requirejs(['qunit'], function(QUnit) {
+function makeAjaxSucceedWithResponse(response) {
+  mockAjax(true, response);
+}
 
-		console.log('hej3');
-		
-		QUnit.test( "True is true i.e. I have a working unit test framework", function( assert ) {
-			assert.ok( 1 == "1", "Passed!" );
-		});
+function makeAjaxFail() {
+  mockAjax(false, {});
+}
 
-		// QUnit.test( "börjar i okänt tillstånd", function( assert ) {
-		// 	var vm = BridgeStatusViewModel();
-		// 	assert.equal('unknown', vm.status());
-		// });
 
-		// QUnit.test( "assert.async() test", function( assert ) {
-		//   var done = assert.async();
-		//   var input = $( "#test-input" ).focus();
-		//   setTimeout(function() {
-		//     assert.equal( document.activeElement, input[0], "Input was focused" );
-		//     done();
-		//   });
-		// });
-	})
+describe('bridge status view model', function() {
+
+  it('starts in state unknown', function() {
+    var vm = BridgeStatusVM();
+    expect(vm.status()).toBe('unknown');
+  });
+
+  it('goes to checking when user clicks check', function() {
+    var vm = BridgeStatusVM();
+    vm.check();
+    expect(vm.status()).toBe('checking');
+  });
+
+  it('goes to down when response is false', function() {
+
+    // Mock out jQuery Ajax GET call
+    makeAjaxSucceedWithResponse({Value: false});
+    var vm = BridgeStatusVM();
+    vm.check();
+    expect(vm.status()).toBe('down');
+  });
+
+  it('goes to up when response is true', function() {
+
+    // Mock out jQuery Ajax GET call
+    makeAjaxSucceedWithResponse({Value: true});
+    var vm = BridgeStatusVM();
+    vm.check();
+    expect(vm.status()).toBe('up');
+  });
+
+  it('goes to error when get fails', function() {
+
+    // Mock out jQuery Ajax GET call
+    makeAjaxFail();
+    var vm = BridgeStatusVM();
+    vm.check();
+    expect(vm.status()).toBe('error');
+  });
+
 });
